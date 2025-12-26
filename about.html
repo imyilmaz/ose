@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -710,15 +710,15 @@
                                     <div class="date">OCTOBER 10, 2025</div>
                                     <div class="title">Aluvision Academy - Sharing Knowledge, Building Confidence</div>
                                 </div>
-                                <div class="item" data-src="assets/img/news-3.png">
+                                <div class="item" data-src="assets/img/news-1.png">
                                     <div class="date">OCTOBER 10, 2025</div>
                                     <div class="title">Together in Aluvision Style</div>
                                 </div>
-                                <div class="item" data-src="assets/img/news-4.png">
+                                <div class="item" data-src="assets/img/news-2.png">
                                     <div class="date">OCTOBER 10, 2025</div>
                                     <div class="title">Aluvision Teambuilding</div>
                                 </div>
-                                <div class="item" data-src="assets/img/news-5.png">
+                                <div class="item" data-src="assets/img/news-1.png">
                                     <div class="date">OCTOBER 10, 2025</div>
                                     <div class="title">The Fall Trade Show Season Has Arrived</div>
                                 </div>
@@ -890,7 +890,6 @@
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/ScrollToPlugin.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/SplitText.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/Draggable.min.js" defer></script>
-    <!-- <script src="assets/js/swiper-bundle.min.js"></script> -->
     <script src="assets/js/global.js" defer></script>
     <script>
 
@@ -1104,309 +1103,7 @@
             }
 
             initLogosSlider();
-
-            // WHAT WE DO cards animations
-            const wwdCards = gsap.utils.toArray(".wwd-card");
-            const wwdInners = wwdCards.map(c => c.querySelector(".wwd-card-inner") || c);
-            if (wwdInners.length) {
-                gsap.set(wwdInners, { y: 80, opacity: 0, filter: "blur(12px)" });
-            }
-            wwdInners.forEach((inner, i) => {
-                gsap.fromTo(inner,
-                    { y: 80, opacity: 0, filter: "blur(12px)" },
-                    {
-                        y: 0,
-                        opacity: 1,
-                        filter: "blur(0px)",
-                        duration: 0.8,
-                        ease: "power3.out",
-                        delay: i * 0.1,
-                        immediateRender: false,
-                        onComplete: () => gsap.set(inner, { opacity: 1, filter: "blur(0px)", y: 0 }),
-                        onReverseComplete: () => gsap.set(inner, { opacity: 0, filter: "blur(12px)", y: 80 }),
-                        scrollTrigger: {
-                            trigger: inner,
-                            start: "top 70%",
-                            toggleActions: "play reverse play reverse"
-                        }
-                    }
-                );
-            });
-
-            // WHAT WE DO hover reveal
-            wwdCards.forEach(card => {
-                const overlay = card.querySelector(".wwd-overlay");
-                const para = overlay?.querySelector("p");
-                const bg = overlay?.querySelector(".overlay-bg");
-                if (para) gsap.set(para, { height: 0, opacity: 0, y: 10, overflow: "hidden", display: "block" });
-                if (bg) gsap.set(bg, { opacity: 0 });
-                if (!overlay) return;
-
-                const tl = gsap.timeline({ paused: true, defaults: { ease: "power2.out" } });
-                if (bg) tl.to(bg, { opacity: 1, duration: 0.25 }, 0);
-                if (para) tl.to(para, { height: "auto", opacity: 1, y: 0, duration: 0.35 }, 0);
-
-                card.addEventListener("mouseenter", () => tl.play());
-                card.addEventListener("mouseleave", () => tl.reverse());
-            });
-
-            const wwdSection = document.querySelector(".main-what-we-do");
-            let wwdMoveHandler;
-
-            function attachWwdMouse() {
-                if (wwdMoveHandler || !wwdSection) return;
-                wwdMoveHandler = (e) => {
-                    const rect = wwdSection.getBoundingClientRect();
-                    const x = ((e.clientX - rect.left) / rect.width - 0.5) || 0;
-                    const y = ((e.clientY - rect.top) / rect.height - 0.5) || 0;
-                    const factors = [12, 32, 38, 24];
-                    wwdCards.forEach((card, idx) => {
-                        const strength = factors[idx] || factors[factors.length - 1];
-                        gsap.to(card, {
-                            x: x * strength,
-                            y: y * strength,
-                            duration: 0.35,
-                            ease: "power3.out",
-                            overwrite: true
-                        });
-                    });
-                };
-                wwdSection.addEventListener("mousemove", wwdMoveHandler);
-            }
-
-            function detachWwdMouse() {
-                if (!wwdMoveHandler || !wwdSection) return;
-                wwdSection.removeEventListener("mousemove", wwdMoveHandler);
-                wwdMoveHandler = null;
-                wwdCards.forEach(card => {
-                    gsap.to(card, { x: 0, y: 0, duration: 0.4, ease: "power2.out" });
-                });
-            }
-
-            if (wwdSection && wwdCards.length) {
-                ScrollTrigger.create({
-                    trigger: wwdSection,
-                    start: "top 80%",
-                    end: "bottom 10%",
-                    onEnter: attachWwdMouse,
-                    onEnterBack: attachWwdMouse,
-                    onLeave: detachWwdMouse,
-                    onLeaveBack: detachWwdMouse
-                });
-            }
-
-            // Product step helpers
-            const spImages = gsap.utils.toArray(".showcase-img");
-            const spTexts = gsap.utils.toArray(".show-product-text");
-            const spCurrent = document.querySelector(".show-product-counter .current");
-            let spActive = 1;
-
-            const setSpStep = (step) => {
-                const steps = spImages.length;
-                const clamped = gsap.utils.clamp(1, steps, step);
-                if (clamped === spActive) return;
-
-                const newTxt = spTexts.find(el => Number(el.dataset.step) === clamped);
-                const oldTxt = spTexts.find(el => Number(el.dataset.step) === spActive);
-
-                if (oldTxt) {
-                    gsap.to(oldTxt, { opacity: 0, y: 30, filter: "blur(10px)", duration: 0.35 });
-                    oldTxt.classList.remove("is-active");
-                }
-                if (newTxt) {
-                    gsap.fromTo(newTxt,
-                        { opacity: 0, y: 30, filter: "blur(10px)" },
-                        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.45 }
-                    );
-                    newTxt.classList.add("is-active");
-                }
-
-                spImages.forEach(img => img.classList.toggle("is-active", Number(img.dataset.step) === clamped));
-                if (spCurrent) spCurrent.textContent = ("0" + clamped).slice(-2);
-                spActive = clamped;
-            };
-
-            spImages.forEach((img, i) => {
-                img.dataset.step = String(i + 1);
-            });
-
-            // Master timeline: WWD pin, showcase grow -> shrink, product behind
-            (() => {
-                const wrapper = document.querySelector(".master-animation-wrapper");
-                const showcase = document.querySelector(".main-showcase-3d");
-                const product = document.querySelector(".main-show-product");
-                if (!wrapper || !showcase || !product) return;
-
-                const setStart = () => {
-                    gsap.set(showcase, {
-                        top: "100%",
-                        left: 0,
-                        width: "100%",
-                        height: "100vh",
-                        scale: 0.5,
-                        autoAlpha: 1,
-                        zIndex: 20,
-                        transformOrigin: "50% 50%",
-                        borderRadius: "400px"
-                    });
-                    gsap.set(product, {
-                        position: "absolute",
-                        inset: 0,
-                        autoAlpha: 0,
-                        visibility: "hidden",
-                        pointerEvents: "none",
-                        y: "0vh",
-                        scale: 1,
-                    });
-                };
-
-                setStart();
-
-                const masterTl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: wrapper,
-                        start: "bottom bottom", // start after WWD fully in view + extra offset
-                        end: "+=400%",
-                        pin: true,
-                        scrub: 1,
-                        anticipatePin: 1,
-                        invalidateOnRefresh: true,
-                        onRefresh: setStart
-                    }
-                });
-
-                // Scroll gap before showcase enters (no movement, just space)
-                masterTl.to({}, { duration: 2 }, 0);
-
-                // Showcase grows to full screen
-                masterTl.to(showcase, {
-                    top: 0,
-                    scale: 1,
-                    autoAlpha: 1,
-                    delay: 1,
-                    duration: 2, // slower entry
-                    ease: "power2.out",
-                    borderRadius: "0px"
-                }, 0);
-
-                // Product appears behind (no movement yet)
-                masterTl.to(product, {
-                    autoAlpha: 1,
-                    visibility: "visible",
-                    pointerEvents: "auto",
-                    duration: 0.8,
-                    ease: "none"
-                }, "-=0.2");
-
-                // Hold at full screen
-                masterTl.to({}, { duration: 0.6 }, ">");
-
-                // Showcase shrinks and fades, product stays behind
-                masterTl.to(showcase, {
-                    scale: 0.1,
-                    y: "-1vh",
-                    autoAlpha: 0,
-                    duration: 3, // slow down closing
-                    ease: "power2.inOut",
-                    borderRadius: "300px"
-                }, "shrink");
-
-                // Product stepper (clipPath) continues during scroll
-                masterTl.to({}, {
-                    duration: 10,
-                    onUpdate: function () {
-                        const raw = this.progress();
-                        const steps = spImages.length;
-                        const stepDur = 1 / Math.max(1, steps - 1);
-
-                        const idx = Math.min(steps - 2, Math.max(0, Math.floor(raw / stepDur)));
-                        const partial = Math.min(1, Math.max(0, (raw - idx * stepDur) / stepDur));
-                        const currentStep = partial >= 0.5 && idx + 1 < steps ? idx + 2 : idx + 1;
-
-                        setSpStep(currentStep);
-
-                        spImages.forEach((img, i) => {
-                            const closing = idx;
-                            const next = idx + 1;
-                            if (i < closing) {
-                                gsap.set(img, { clipPath: "inset(0% 0% 100% 0%)", zIndex: steps - i - 2 });
-                            } else if (i === closing) {
-                                gsap.set(img, { clipPath: `inset(0% 0% ${partial * 100}% 0%)`, zIndex: steps });
-                            } else if (i === next) {
-                                gsap.set(img, { clipPath: "inset(0% 0% 0% 0%)", zIndex: steps - 1 });
-                            } else {
-                                gsap.set(img, { clipPath: "inset(0% 0% 0% 0%)", zIndex: steps - i - 1 });
-                            }
-                        });
-                    }
-                });
-            })();
-
         });
-
-
-
-    </script>
-    <script>
-        // Lazy-load model-viewer when it comes into view
-        (() => {
-            const selector = "#showcaseModel";
-            const moduleSrc = "https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js";
-            const legacySrc = "https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js";
-            let loadPromise = null;
-
-            const loadModelViewer = () => {
-                if (loadPromise) return loadPromise;
-                if (window.customElements && customElements.get("model-viewer")) return Promise.resolve();
-                loadPromise = new Promise((resolve, reject) => {
-                    const mod = document.createElement("script");
-                    mod.type = "module";
-                    mod.src = moduleSrc;
-                    mod.onload = resolve;
-                    mod.onerror = reject;
-                    document.head.appendChild(mod);
-
-                    const legacy = document.createElement("script");
-                    legacy.noModule = true;
-                    legacy.src = legacySrc;
-                    document.head.appendChild(legacy);
-                });
-                return loadPromise;
-            };
-
-            const observeModel = () => {
-                const el = document.querySelector(selector);
-                if (!el) return;
-
-                const isInView = () => {
-                    const rect = el.getBoundingClientRect();
-                    const vh = window.innerHeight || document.documentElement.clientHeight;
-                    return rect.top < vh + 200 && rect.bottom > -200;
-                };
-
-                if (isInView()) {
-                    loadModelViewer();
-                    return;
-                }
-
-                const io = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            loadModelViewer().catch(() => { });
-                            io.disconnect();
-                        }
-                    });
-                }, { rootMargin: "200px" });
-
-                io.observe(el);
-            };
-
-            if (document.readyState === "loading") {
-                document.addEventListener("DOMContentLoaded", observeModel);
-            } else {
-                observeModel();
-            }
-        })();
     </script>
 </body>
 
