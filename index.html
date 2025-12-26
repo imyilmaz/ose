@@ -1,6 +1,5 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,10 +8,13 @@
     <meta name="keywords" content="OSE">
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+    <link rel="icon" href="assets/img/icons/ICON-150x150.png" sizes="32x32" />
+    <link rel="icon" href="assets/img/icons/ICON-320x320.png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="assets/img/icons/ICON-320x320.png" />
+    <meta name="msapplication-TileImage" content="assets/img/icons/ICON-320x320.png" />
     <link rel="stylesheet" href="https://use.typekit.net/bpt3fkp.css">
     <link rel="stylesheet" href="assets/scss/global.css">
 </head>
-
 <body>
     <div class="intro">
         <div class="part-crescents">
@@ -385,7 +387,6 @@
                             </div>
                         </div>
                     </div><!-- main-what-we-do -->
-
                     <div class="main-showcase-3d">
                         <div class="container">
                             <div class="head">
@@ -1027,7 +1028,7 @@
                     const w = window.innerWidth;
                     if (w >= 1200) return 6;
                     if (w >= 992) return 5;
-                    if (w >= 768) return 4;
+                    if (w >= 767) return 4;
                     return 3;
                 }
 
@@ -1155,6 +1156,7 @@
 
             function attachWwdMouse() {
                 if (wwdMoveHandler || !wwdSection) return;
+                if (window.innerWidth < 992) return; // skip on touch layouts
                 wwdMoveHandler = (e) => {
                     const rect = wwdSection.getBoundingClientRect();
                     const x = ((e.clientX - rect.left) / rect.width - 0.5) || 0;
@@ -1193,6 +1195,11 @@
                     onLeave: detachWwdMouse,
                     onLeaveBack: detachWwdMouse
                 });
+                window.addEventListener("resize", () => {
+                    if (window.innerWidth < 992) {
+                        detachWwdMouse();
+                    }
+                });
             }
 
             // Product step helpers
@@ -1230,117 +1237,202 @@
                 img.dataset.step = String(i + 1);
             });
 
-            // Master timeline: WWD pin, showcase grow -> shrink, product behind
-            (() => {
-                const wrapper = document.querySelector(".master-animation-wrapper");
-                const showcase = document.querySelector(".main-showcase-3d");
-                const product = document.querySelector(".main-show-product");
-                if (!wrapper || !showcase || !product) return;
+            // WWD mobile slider (only < 769px): first 3 cards in horizontal snap slider, card-4 stays above
+            ScrollTrigger.matchMedia({
+                "(max-width: 769px)": function () {
+                    const container = document.querySelector(".wwd-cards");
+                    if (!container) return;
 
-                const setStart = () => {
-                    gsap.set(showcase, {
-                        top: "100%",
-                        left: 0,
-                        width: "100%",
-                        height: "100vh",
-                        scale: 0.5,
-                        autoAlpha: 1,
-                        zIndex: 20,
-                        transformOrigin: "50% 50%",
-                        borderRadius: "400px"
+                    const card4 = container.querySelector(".wwd-card.card-4");
+                    const sliderCards = Array.from(container.querySelectorAll(".wwd-card")).filter(c => !c.classList.contains("card-4"));
+                    if (!sliderCards.length) return;
+
+                    const slider = document.createElement("div");
+                    const track = document.createElement("div");
+                    slider.className = "wwd-mobile-slider";
+                    track.className = "wwd-mobile-track";
+                    sliderCards.forEach(card => {
+                        card.classList.add("wwd-mobile-slide");
+                        track.appendChild(card);
                     });
-                    gsap.set(product, {
-                        position: "absolute",
-                        inset: 0,
-                        autoAlpha: 0,
-                        visibility: "hidden",
-                        pointerEvents: "none",
-                        y: "0vh",
-                        scale: 1,
-                    });
-                };
+                    slider.appendChild(track);
 
-                setStart();
-
-                const masterTl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: wrapper,
-                        start: "bottom bottom", // start after WWD fully in view + extra offset
-                        end: "+=400%",
-                        pin: true,
-                        scrub: 1,
-                        anticipatePin: 1,
-                        invalidateOnRefresh: true,
-                        onRefresh: setStart
+                    const anchor = card4 ? card4.nextSibling : null;
+                    if (card4) {
+                        if (anchor) {
+                            container.insertBefore(slider, anchor);
+                        } else {
+                            container.appendChild(slider);
+                        }
+                    } else {
+                        container.appendChild(slider);
                     }
-                });
 
-                // Scroll gap before showcase enters (no movement, just space)
-                masterTl.to({}, { duration: 2 }, 0);
+                    // simple drag/snap slider
+                    const gapPx = 16;
+                    let draggable = null;
 
-                // Showcase grows to full screen
-                masterTl.to(showcase, {
-                    top: 0,
-                    scale: 1,
-                    autoAlpha: 1,
-                    delay: 1,
-                    duration: 2, // slower entry
-                    ease: "power2.out",
-                    borderRadius: "0px"
-                }, 0);
+                    const buildDrag = () => {
+                        const slideWidth = sliderCards[0]?.getBoundingClientRect().width || 0;
+                        const total = sliderCards.length;
+                        const snapDist = slideWidth + gapPx;
+                        const sliderWidth = slider.clientWidth;
+                        const extraOffset = (sliderWidth - slideWidth) / 2;
+                        const maxX = extraOffset;
+                        const minX = extraOffset - Math.max(0, (total - 1) * snapDist);
 
-                // Product appears behind (no movement yet)
-                masterTl.to(product, {
-                    autoAlpha: 1,
-                    visibility: "visible",
-                    pointerEvents: "auto",
-                    duration: 0.8,
-                    ease: "none"
-                }, "-=0.2");
+                        gsap.set(track, { x: maxX });
 
-                // Hold at full screen
-                masterTl.to({}, { duration: 0.6 }, ">");
-
-                // Showcase shrinks and fades, product stays behind
-                masterTl.to(showcase, {
-                    scale: 0.1,
-                    y: "-1vh",
-                    autoAlpha: 0,
-                    duration: 3, // slow down closing
-                    ease: "power2.inOut",
-                    borderRadius: "300px"
-                }, "shrink");
-
-                // Product stepper (clipPath) continues during scroll
-                masterTl.to({}, {
-                    duration: 10,
-                    onUpdate: function () {
-                        const raw = this.progress();
-                        const steps = spImages.length;
-                        const stepDur = 1 / Math.max(1, steps - 1);
-
-                        const idx = Math.min(steps - 2, Math.max(0, Math.floor(raw / stepDur)));
-                        const partial = Math.min(1, Math.max(0, (raw - idx * stepDur) / stepDur));
-                        const currentStep = partial >= 0.5 && idx + 1 < steps ? idx + 2 : idx + 1;
-
-                        setSpStep(currentStep);
-
-                        spImages.forEach((img, i) => {
-                            const closing = idx;
-                            const next = idx + 1;
-                            if (i < closing) {
-                                gsap.set(img, { clipPath: "inset(0% 0% 100% 0%)", zIndex: steps - i - 2 });
-                            } else if (i === closing) {
-                                gsap.set(img, { clipPath: `inset(0% 0% ${partial * 100}% 0%)`, zIndex: steps });
-                            } else if (i === next) {
-                                gsap.set(img, { clipPath: "inset(0% 0% 0% 0%)", zIndex: steps - 1 });
-                            } else {
-                                gsap.set(img, { clipPath: "inset(0% 0% 0% 0%)", zIndex: steps - i - 1 });
+                        if (draggable) draggable.kill();
+                        draggable = Draggable.create(track, {
+                            type: "x",
+                            bounds: { minX, maxX },
+                            inertia: false,
+                            allowContextMenu: false,
+                            onDragEnd: function () {
+                                const target = Math.round((maxX - this.x) / snapDist);
+                                const clamped = gsap.utils.clamp(0, total - 1, target);
+                                gsap.to(track, { x: maxX - clamped * snapDist, duration: 0.35, ease: "power2.out" });
                             }
+                        })[0];
+                    };
+
+                    buildDrag();
+                    window.addEventListener("resize", buildDrag);
+
+                    // cleanup on breakpoint change
+                    return () => {
+                        window.removeEventListener("resize", buildDrag);
+                        draggable?.kill();
+                        gsap.set(track, { x: 0 });
+                        sliderCards.forEach(card => {
+                            card.classList.remove("wwd-mobile-slide");
+                            container.insertBefore(card, card4 || null);
                         });
-                    }
-                });
-            })();
+                        slider.remove();
+                    };
+                }
+            });
+
+            // Master timeline: WWD pin, showcase grow -> shrink, product behind (desktop only)
+            ScrollTrigger.matchMedia({
+                "(min-width: 769px)": function () {
+                    const wrapper = document.querySelector(".master-animation-wrapper");
+                    const showcase = document.querySelector(".main-showcase-3d");
+                    const product = document.querySelector(".main-show-product");
+                    if (!wrapper || !showcase || !product) return;
+
+                    const setStart = () => {
+                        gsap.set(showcase, {
+                            top: "100%",
+                            left: 0,
+                            width: "100%",
+                            height: "100vh",
+                            scale: 0.5,
+                            autoAlpha: 1,
+                            zIndex: 20,
+                            transformOrigin: "50% 50%",
+                            borderRadius: "400px"
+                        });
+                        gsap.set(product, {
+                            position: "absolute",
+                            inset: 0,
+                            autoAlpha: 0,
+                            visibility: "hidden",
+                            pointerEvents: "none",
+                            y: "0vh",
+                            scale: 1,
+                        });
+                    };
+
+                    setStart();
+
+                    const masterTl = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: wrapper,
+                            start: "bottom bottom", // start after WWD fully in view + extra offset
+                            end: "+=400%",
+                            pin: true,
+                            scrub: 1,
+                            anticipatePin: 1,
+                            invalidateOnRefresh: true,
+                            onRefresh: setStart
+                        }
+                    });
+
+                    // Scroll gap before showcase enters (no movement, just space)
+                    masterTl.to({}, { duration: 2 }, 0);
+
+                    // Showcase grows to full screen
+                    masterTl.to(showcase, {
+                        top: 0,
+                        scale: 1,
+                        autoAlpha: 1,
+                        delay: 1,
+                        duration: 2, // slower entry
+                        ease: "power2.out",
+                        borderRadius: "0px"
+                    }, 0);
+
+                    // Product appears behind (no movement yet)
+                    masterTl.to(product, {
+                        autoAlpha: 1,
+                        visibility: "visible",
+                        pointerEvents: "auto",
+                        duration: 0.8,
+                        ease: "none"
+                    }, "-=0.2");
+
+                    // Hold at full screen
+                    masterTl.to({}, { duration: 0.6 }, ">");
+
+                    // Showcase shrinks and fades, product stays behind
+                    masterTl.to(showcase, {
+                        scale: 0.1,
+                        y: "-1vh",
+                        autoAlpha: 0,
+                        duration: 3, // slow down closing
+                        ease: "power2.inOut",
+                        borderRadius: "300px"
+                    }, "shrink");
+
+                    // Product stepper (clipPath) continues during scroll
+                    masterTl.to({}, {
+                        duration: 10,
+                        onUpdate: function () {
+                            const raw = this.progress();
+                            const steps = spImages.length;
+                            const stepDur = 1 / Math.max(1, steps - 1);
+
+                            const idx = Math.min(steps - 2, Math.max(0, Math.floor(raw / stepDur)));
+                            const partial = Math.min(1, Math.max(0, (raw - idx * stepDur) / stepDur));
+                            const currentStep = partial >= 0.5 && idx + 1 < steps ? idx + 2 : idx + 1;
+
+                            setSpStep(currentStep);
+
+                            spImages.forEach((img, i) => {
+                                const closing = idx;
+                                const next = idx + 1;
+                                if (i < closing) {
+                                    gsap.set(img, { clipPath: "inset(0% 0% 100% 0%)", zIndex: steps - i - 2 });
+                                } else if (i === closing) {
+                                    gsap.set(img, { clipPath: `inset(0% 0% ${partial * 100}% 0%)`, zIndex: steps });
+                                } else if (i === next) {
+                                    gsap.set(img, { clipPath: "inset(0% 0% 0% 0%)", zIndex: steps - 1 });
+                                } else {
+                                    gsap.set(img, { clipPath: "inset(0% 0% 0% 0%)", zIndex: steps - i - 1 });
+                                }
+                            });
+                        }
+                    });
+
+                    // cleanup when media query changes
+                    return () => {
+                        masterTl.scrollTrigger?.kill();
+                        masterTl.kill();
+                    };
+                }
+            });
 
         });
 
