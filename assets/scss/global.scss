@@ -416,9 +416,15 @@ body{ overflow-x: hidden; overscroll-behavior: none;
     .logos-track{
       display: flex;
       align-items: center;
-      gap: 24px;
+      gap: 0;
       will-change: transform;
       &:active { cursor: grabbing; }
+      .logos-group{
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        margin-left: 24px;
+      }
       .logo-item{
         flex: 0 0 auto;
         display: grid;

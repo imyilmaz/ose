@@ -1021,62 +1021,46 @@
 
                 const originals = Array.from(track.children);
                 const gap = 24;
-                let tl;
+                let tickerFn;
                 let scrollCtrl;
                 let hover = false;
+                let speedScale = 1;
+                const groups = [];
+                let pos = 0;
 
-                function slidesPerView() {
-                    const w = window.innerWidth;
-                    if (w >= 1200) return 6;
-                    if (w >= 992) return 5;
-                    if (w >= 767) return 4;
-                    return 3;
-                }
+                const createGroup = () => {
+                    const wrap = document.createElement("div");
+                    wrap.className = "logos-group";
+                    wrap.style.display = "flex";
+                    wrap.style.alignItems = "center";
+                    wrap.style.gap = `${gap}px`;
+                    originals.forEach(node => wrap.appendChild(node.cloneNode(true)));
+                    return wrap;
+                };
 
-                function trackWidth() {
-                    return Array.from(track.children)
-                        .reduce((sum, el) => sum + el.getBoundingClientRect().width + gap, -gap);
-                }
+                const groupWidth = () => (track.firstElementChild?.getBoundingClientRect().width || 0);
 
                 function build() {
                     slider.style.overflow = "hidden";
                     track.style.display = "flex";
                     track.style.alignItems = "center";
-                    track.style.gap = `${gap}px`;
+                    track.style.gap = "0px";
                     track.style.willChange = "transform";
                     track.style.cursor = "grab";
+                    track.innerHTML = "";
+                    groups.length = 0;
 
-                    while (track.children.length > originals.length) {
-                        track.removeChild(track.lastElementChild);
+                    // merkez + sag/sol 2'ser kopya = 5 grup
+                    for (let i = 0; i < 5; i++) {
+                        const g = createGroup();
+                        groups.push(g);
+                        track.appendChild(g);
                     }
 
-                    const per = slidesPerView();
-                    const slideW = Math.ceil(slider.clientWidth / per);
-                    Array.from(track.children).forEach(el => {
-                        el.style.minWidth = `${slideW}px`;
-                        el.style.maxWidth = `${slideW}px`;
-                    });
+                    pos = -groupWidth() * 2;
+                    gsap.set(track, { x: pos });
 
-                    let tw = trackWidth();
-                    let guard = 0;
-                    while (tw < slider.clientWidth * 3 && guard < 12) {
-                        originals.forEach(node => track.appendChild(node.cloneNode(true)));
-                        tw = trackWidth();
-                        guard++;
-                    }
-
-                    const total = trackWidth();
-                    if (tl) tl.kill();
                     if (scrollCtrl) scrollCtrl.kill();
-                    const wrapX = gsap.utils.wrap(-total, 0);
-                    tl = gsap.to(track, {
-                        x: `-=${total}`,
-                        duration: total / 120,
-                        ease: "none",
-                        repeat: -1,
-                        modifiers: { x: gsap.utils.unitize(x => wrapX(parseFloat(x))) }
-                    });
-
                     scrollCtrl = ScrollTrigger.create({
                         trigger: slider,
                         start: "top bottom",
@@ -1084,20 +1068,69 @@
                         onUpdate: (self) => {
                             if (hover) return;
                             const v = self.getVelocity(); // px/s
-                            const scale = gsap.utils.clamp(0.4, 3.5, 1 + v / 400);
-                            tl.timeScale(scale);
+                            speedScale = gsap.utils.clamp(0.5, 3.5, 1 + v / 600);
                         }
                     });
 
-                    initDrag(tl, track, slider, total);
+                    const recycle = () => {
+                        const gw = groupWidth();
+                        const leftLimit = -gw * 3;   // merkezin 1 grup soluna kaydı
+                        const rightLimit = -gw;      // merkezin 1 grup sağına kaydı
+                        while (pos <= leftLimit) {
+                            const first = groups.shift();
+                            if (!first) break;
+                            groups.push(first);
+                            track.appendChild(first);
+                            pos += gw;
+                        }
+                        while (pos >= rightLimit) {
+                            const last = groups.pop();
+                            if (!last) break;
+                            groups.unshift(last);
+                            track.insertBefore(last, track.firstChild);
+                            pos -= gw;
+                        }
+                    };
+
+                    const baseSpeed = -.05;
+                    if (tickerFn) gsap.ticker.remove(tickerFn);
+                    tickerFn = (time, deltaTime) => {
+                        const gw = groupWidth();
+                        if (!gw) return;
+                        pos += baseSpeed * speedScale * (deltaTime || 0);
+                        recycle();
+                        gsap.set(track, { x: pos });
+                    };
+                    gsap.ticker.add(tickerFn);
+
+                    if (slider._drag) slider._drag.kill();
+                    const proxy = document.createElement("div");
+                    let startOffset = 0;
+                    slider._drag = Draggable.create(proxy, {
+                        type: "x",
+                        trigger: slider,
+                        inertia: false,
+                        onPress() {
+                            speedScale = 0;
+                            startOffset = pos - this.x;
+                        },
+                        onDrag() {
+                            pos = startOffset + this.x;
+                            recycle();
+                            gsap.set(track, { x: pos });
+                        },
+                        onRelease() {
+                            speedScale = 1;
+                        }
+                    })[0];
 
                     slider.addEventListener("mouseenter", () => {
                         hover = true;
-                        gsap.to(tl, { timeScale: 0.3, duration: 0.6, ease: "power2.out" });
+                        gsap.to({}, { duration: 0.3, onUpdate: () => speedScale = Math.max(0.2, speedScale * 0.3) });
                     });
                     slider.addEventListener("mouseleave", () => {
                         hover = false;
-                        gsap.to(tl, { timeScale: 1, duration: 0.6, ease: "power2.out" });
+                        gsap.to({}, { duration: 0.3, onUpdate: () => speedScale = Math.max(speedScale, 1) });
                     });
                 }
 
