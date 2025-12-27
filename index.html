@@ -611,6 +611,7 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="main-show-cards"></div>
                     </div><!-- main-show-product -->
                     <div class="anim-spacer"></div>
                 </section>
@@ -1235,6 +1236,82 @@
 
             spImages.forEach((img, i) => {
                 img.dataset.step = String(i + 1);
+            });
+
+            const buildMobileProductCards = () => {
+                const product = document.querySelector(".main-show-product");
+                if (!product) return;
+
+                let host = product.querySelector(".main-show-cards");
+                if (!host) {
+                    host = document.createElement("div");
+                    host.className = "main-show-cards";
+                    product.appendChild(host);
+                }
+
+                host.innerHTML = "";
+
+                const cards = spTexts.map((txt, idx) => {
+                    const step = Number(txt.dataset.step) || idx + 1;
+                    const img = spImages.find(im => Number(im.dataset.step) === step) || spImages[idx];
+                    const card = document.createElement("div");
+                    card.className = "main-show-card";
+                    card.dataset.step = String(step);
+
+                    const body = txt.cloneNode(true);
+                    body.classList.remove("is-active");
+                    body.classList.add("main-show-card-body", "is-active");
+                    const bg = body.querySelector(".bg");
+                    if (bg) bg.remove();
+                    const meta = body.querySelector(".show-product-meta");
+                    if (meta) meta.remove();
+
+                    const media = document.createElement("div");
+                    media.className = "main-show-card-media";
+                    if (img) {
+                        const clone = img.cloneNode(true);
+                        clone.classList.remove("showcase-img");
+                        clone.classList.add("main-show-card-img");
+                        media.appendChild(clone);
+                    }
+
+                    card.appendChild(body);
+                    card.appendChild(media);
+                    host.appendChild(card);
+                    return card;
+                }).filter(Boolean);
+
+                if (!cards.length) return;
+
+                const fades = cards.map(card => gsap.fromTo(card,
+                    { opacity: 0, y: 60, filter: "blur(12px)" },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        filter: "blur(0px)",
+                        duration: 0.85,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: card,
+                            start: "top 85%",
+                            toggleActions: "play none none reset"
+                        }
+                    })
+                );
+
+                return () => {
+                    fades.forEach(tl => {
+                        tl.scrollTrigger?.kill();
+                        tl.kill();
+                    });
+                    host.innerHTML = "";
+                };
+            };
+
+            ScrollTrigger.matchMedia({
+                "(max-width: 768px)": function () {
+                    return buildMobileProductCards();
+                }
             });
 
             // WWD mobile slider (only < 769px): first 3 cards in horizontal snap slider, card-4 stays above

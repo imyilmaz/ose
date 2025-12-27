@@ -610,6 +610,7 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="main-show-cards"></div>
                     </div><!-- main-show-product -->
                     <div class="anim-spacer"></div>
                 </section>
@@ -911,6 +912,96 @@
                 ignoreMobileResize: true,
             });
             //smoother.effects("img", { speed: "auto" });
+
+            const productImages = gsap.utils.toArray(".showcase-img");
+            const productTexts = gsap.utils.toArray(".show-product-text");
+            productImages.forEach((img, i) => {
+                img.dataset.step = String(i + 1);
+            });
+
+            const buildMobileProductCards = () => {
+                const product = document.querySelector(".main-show-product");
+                if (!product) return;
+
+                let host = product.querySelector(".main-show-cards");
+                if (!host) {
+                    host = document.createElement("div");
+                    host.className = "main-show-cards";
+                    product.appendChild(host);
+                }
+
+                host.innerHTML = "";
+
+                const cards = productTexts.map((txt, idx) => {
+                    const step = Number(txt.dataset.step) || idx + 1;
+                    const img = productImages.find(im => Number(im.dataset.step) === step) || productImages[idx];
+                    const card = document.createElement("div");
+                    card.className = "main-show-card";
+                    card.dataset.step = String(step);
+
+                    const media = document.createElement("div");
+                    media.className = "main-show-card-media";
+                    if (img) {
+                        const clone = img.cloneNode(true);
+                        clone.classList.remove("showcase-img");
+                        clone.classList.add("main-show-card-img");
+                        media.appendChild(clone);
+                    }
+
+                    const body = txt.cloneNode(true);
+                    body.classList.remove("is-active");
+                    body.classList.add("main-show-card-body", "is-active");
+                    const bg = body.querySelector(".bg");
+                    if (bg) bg.remove();
+                    const meta = body.querySelector(".show-product-meta");
+                    if (meta) meta.remove();
+
+                    card.appendChild(media);
+                    card.appendChild(body);
+                    host.appendChild(card);
+                    return card;
+                }).filter(Boolean);
+
+                if (!cards.length) return;
+
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: host,
+                        start: "top top",
+                        end: `+=${cards.length * 90}%`,
+                        pin: true,
+                        scrub: true,
+                        anticipatePin: 1,
+                        invalidateOnRefresh: true
+                    }
+                });
+
+                gsap.set(cards, i => ({
+                    yPercent: i === 0 ? 0 : 110,
+                    scale: i === 0 ? 1 : 0.96,
+                    zIndex: i + 1,
+                    autoAlpha: 1
+                }));
+
+                cards.forEach((card, i) => {
+                    const next = cards[i + 1];
+                    if (!next) return;
+                    tl.to(card, { yPercent: -40 - i * 6, scale: 0.9, autoAlpha: 0.35, duration: 1 }, i);
+                    tl.to(next, { yPercent: 0, scale: 1, autoAlpha: 1, duration: 1 }, i);
+                });
+
+                return () => {
+                    tl.scrollTrigger?.kill();
+                    tl.kill();
+                    host.innerHTML = "";
+                };
+            };
+
+            ScrollTrigger.matchMedia({
+                "(max-width: 768px)": function () {
+                    return buildMobileProductCards();
+                }
+            });
 
 
 
