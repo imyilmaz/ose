@@ -141,27 +141,25 @@
         position: absolute;
         right: 0;
         top: calc(100% + 6px);
-        background: #fff;
         border-radius: 10px;
         padding: 8px 0;
-        min-width: 120px;
-        box-shadow: 0 16px 50px rgba(0,0,0,0.18);
         list-style: none;
         margin: 0;
         opacity: 0;
         transform: translateY(-6px);
         pointer-events: none;
         transition: 0.25s ease;
+        background: rgba(255,255,255,.1);
+        backdrop-filter: blur(30px);
         li{
           a{
             display: block;
             padding: 10px 14px;
-            color: #000;
-            font-size: 15px;
+            color: #fff;
+            font-size: 17px;
             font-weight: 500;
             white-space: nowrap;
             transition: 0.2s;
-            &:hover{ background: #f5f5f5; }
           }
         }
       }
@@ -384,7 +382,7 @@ $menuLenghtTotal: $menuLenght * 100;
 @media only screen and (max-width : 991px){ /* (max-width : 991px) */
   .header{ transform: translateX(100%); pointer-events: none; position: fixed; width: 100%; top: 0; max-width: 500px; right: 0; left: auto; overflow-x: hidden; overflow-y: auto; height: 100vh; z-index: 280; background: #000;
     transition-duration: 1s; transition-delay: .25s; transition-property: transform, -webkit-transform; transition-timing-function: cubic-bezier(1, 0, .25, 1);
-    .container{ min-width: 280px; padding: 10px 10px 0; 
+    .container{ min-width: 280px; padding: 10px 10px 70px; 
       .rower{ justify-content: flex-start; }
     }
     .logo{ opacity: 0; pointer-events: none; margin-bottom: 10px; display: none;
@@ -439,12 +437,36 @@ $menuLenghtTotal: $menuLenght * 100;
       } 
     }
     .lang-project{
-      justify-content: flex-start;
+      justify-content: space-between;
       .language{
+        position: relative;
+        z-index: 4;
         a{ font-size: 25px; color: #fff !important; padding: 16px 15px; }
+        .lang-trigger{
+          font-size: 25px; color: #fff !important; padding: 16px 15px; 
+        }
+        .lang-menu{
+          margin-bottom: 20px;
+          top: 2px;
+          right: initial;
+          left: 100%;
+          display: flex;
+          z-index: 10;
+        }
+        &.is-open{
+          &~.start-project{
+            a{
+              opacity: 0;
+            }
+          }
+        }
       }
       .start-project{
-        
+        padding-right: 15px;
+        a{
+          transition: .4s;
+          opacity: 1;
+        }
       }
     }
     /* menu animate function */
