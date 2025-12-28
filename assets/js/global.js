@@ -1,4 +1,4 @@
-$(function () {
+﻿$(function () {
   /* General Settings */
   const open = 'open';
   const $hamburger = $('.hamburger');
@@ -225,8 +225,28 @@ function toggleScrollLock(lock) {
   });
 })();
 /*/ intro */
+(() => {
+  const introEl = document.querySelector('.intro');
+  if (!introEl) return;
+
+  const cookieName = 'ose_intro_seen';
+  const cookieDays = 7;
+  const getCookie = (name) => document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith(name + '='))?.split('=')[1];
+  const setCookie = (name, value, days) => {
+    const maxAge = days * 24 * 60 * 60;
+    document.cookie = `${name}=${value}; max-age=${maxAge}; path=/`;
+  };
+
+  const hasSeen = !!getCookie(cookieName);
+  if (hasSeen) {
+    introEl.remove();
+    return;
+  }
+  setCookie(cookieName, '1', cookieDays);
+  introEl.style.display = 'block';
+
   gsap.set([
-  '.intro .logo',           // tüm logo parçaları
+  '.intro .logo',
   '.intro .part-1',
   '.intro .part-2',
   '.intro .part-3',
@@ -237,27 +257,23 @@ function toggleScrollLock(lock) {
   gsap.set('.intro .part-4', { width: '200%', autoAlpha: 1 });
   gsap.set('.intro .part-crescents', { transformOrigin: '50% 50%', rotation: 0 });
 
-  // Body’yi kilitle
   document.body.style.overflow = 'hidden';
 
   const tl = gsap.timeline({
   defaults: { ease: 'power2.out' },
   onComplete: () => {
-      // açılışı DOM’dan tamamen çıkar
       const opener = document.querySelector('.intro');
       opener?.remove();
       document.body.style.overflow = '';
   }
   });
 
-  // 1) part-4 genişlik animasyonu (eski keyframe)
   tl.to('.intro .part-4', {
   width: '2%', duration: 0.8
   }).to('.intro .part-4', {
   width: '6.6%', duration: 0.2
   });
 
-  // 2) part-crescents dönmeye başlasın, 1-2-3 sırayla görünsün
   tl.fromTo('.intro .part-crescents',
       { rotation: -220, transformOrigin: '50% 50%' },
       { rotation: 0, duration: 1.5, delay: 0.2, ease: 'power2.inOut' },
@@ -268,13 +284,10 @@ function toggleScrollLock(lock) {
   .to('.intro .part-2', { autoAlpha: 1, delay: .1, duration: 0.2 }, '<+0.15')
   .to('.intro .part-3', { autoAlpha: 1, delay: .1, duration: 0.2 }, '<+0.15');
 
-  // 3) part-5 fade-in hemen dönme bitmeden
   tl.to('.intro .part-5', { autoAlpha: 1, duration: 0.25 }, '-=0.25');
 
-  // 4) part-6 fade-in part-5 bitmeden
   tl.to('.intro .part-6', { autoAlpha: 1, duration: 0.25 }, '-=0.15');
 
-  // 5) Son sahne: part-5 büyüsün (50x) + x kayması, aynı anda intro fade-out
   tl.to('.intro .part-5', {
   scale: 50,
   xPercent: 1494,
@@ -289,7 +302,7 @@ function toggleScrollLock(lock) {
   }, 'final')
 
   .to('.intro', { autoAlpha: 0, duration: 0.6, ease: 'power1.in' }, 'final+=0.1');
-
+})();
 /* Opening */
 
 
