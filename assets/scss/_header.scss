@@ -119,7 +119,12 @@
     flex: 1 1 0;
     justify-content: flex-end;
     .language{
-      a{
+      position: relative;
+      .lang-trigger{
+        background: transparent;
+        border: 0;
+        outline: 0;
+        cursor: pointer;
         display: flex;
         align-items: center;
         font-size: 17px;
@@ -131,6 +136,41 @@
         span{
           &.icon{}
         } 
+      }
+      .lang-menu{
+        position: absolute;
+        right: 0;
+        top: calc(100% + 6px);
+        background: #fff;
+        border-radius: 10px;
+        padding: 8px 0;
+        min-width: 120px;
+        box-shadow: 0 16px 50px rgba(0,0,0,0.18);
+        list-style: none;
+        margin: 0;
+        opacity: 0;
+        transform: translateY(-6px);
+        pointer-events: none;
+        transition: 0.25s ease;
+        li{
+          a{
+            display: block;
+            padding: 10px 14px;
+            color: #000;
+            font-size: 15px;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: 0.2s;
+            &:hover{ background: #f5f5f5; }
+          }
+        }
+      }
+      &.is-open{
+        .lang-menu{
+          opacity: 1;
+          pointer-events: all;
+          transform: translateY(0);
+        }
       }
     }
     .start-project{
@@ -214,7 +254,7 @@
     }
     .lang-project{
       .language{
-        a{ color: #000; }
+        .lang-trigger{ color: #000; }
       }
     }
   }
@@ -320,7 +360,7 @@ $menuLenghtTotal: $menuLenght * 100;
 .mobil-logo{ transition: .4s; margin-left: 0; display: none; position: fixed; top: 0; left: 0; z-index: 368; opacity: 1; box-sizing: border-box; width: 100%; background: #000;
   a{ display: block; padding: 10px; width: 230px; position: relative; color: #f07e26;
     img{ display: block; max-width: 100%; }
-    svg{ width: 124px; 
+    svg{ width: 100px; 
       .logo-1,.logo-5,.logo-6{
         fill: #fff;
       }
@@ -333,31 +373,6 @@ $menuLenghtTotal: $menuLenght * 100;
   @media only screen and (max-width : 480px){
     a{
       svg,img{  }
-    }
-  }
-  .start-project{
-    position: absolute;
-    right: 70px;
-    top: 10px;
-    a{
-      width: auto;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 16px;
-      border-radius: 5px 10px 10px 10px;
-      background: #f07e26;
-      color: #fff;
-      font-size: 16px;
-      font-weight: 500;
-      transition: .4s;
-      span{
-        &.icon{
-          svg{
-            width: auto;
-          }
-        }
-      }
     }
   }
   &-fixed{ position: fixed; transition: .4s; }
@@ -429,7 +444,7 @@ $menuLenghtTotal: $menuLenght * 100;
         a{ font-size: 25px; color: #fff !important; padding: 16px 15px; }
       }
       .start-project{
-        display: none;
+        
       }
     }
     /* menu animate function */
