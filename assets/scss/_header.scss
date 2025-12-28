@@ -230,7 +230,7 @@ $hamburgerAnimateActive: #f07e26;
 $hamburgerBG: #000;
 $hamburgerBarShadow: 0 0 3px #312f90;
 $hamburgerBarBG: #efefef;
-$menuLenght: 7;
+$menuLenght: 9;
 $menuLenghtTotal: $menuLenght * 100;
 @keyframes color-change-5x{
   0%{ background: $hamburgerAnimateDefault; }
@@ -332,7 +332,32 @@ $menuLenghtTotal: $menuLenght * 100;
   @media only screen and (max-width : 991px){ display: block; }
   @media only screen and (max-width : 480px){
     a{
-      svg,img{ width: 55px; }
+      svg,img{  }
+    }
+  }
+  .start-project{
+    position: absolute;
+    right: 70px;
+    top: 10px;
+    a{
+      width: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 5px 10px 10px 10px;
+      background: #f07e26;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 500;
+      transition: .4s;
+      span{
+        &.icon{
+          svg{
+            width: auto;
+          }
+        }
+      }
     }
   }
   &-fixed{ position: fixed; transition: .4s; }
@@ -356,12 +381,27 @@ $menuLenghtTotal: $menuLenght * 100;
     }
     .header-up{
       padding-top: 100px;
+      .menu{
+        flex-wrap: wrap;
+        padding-left: 10px;
+        a{ 
+          flex: 0 0 100%; 
+          max-width: 100%; 
+          font-size: 25px; 
+          color: #fff !important;
+          line-height: 20px;
+        }
+      }
+    }
+    .container{
+      padding-top: 0;
+      padding-left: 10px;
     }
     .nav-bar{ flex-wrap: wrap; 
       .menu{ min-width: 280px; padding: 0; width: 100%; 
         >ul{ 
-          >li{ flex: 0 0 100%; text-align: center; 
-            >a{ padding: 16px 15px; font-size: 22px; color: #fff !important;
+          >li{ flex: 0 0 100%; text-align: left; 
+            >a{ padding: 16px 15px; font-size: 25px; color: #fff !important;
               &:before{ display: none; left: 0; transform: translate(-25%, -50%); }
             }
             .sub-menu{ position: relative; top: 0; transform: translateY(0); background: rgba(236,72,153,.1); 
@@ -382,6 +422,15 @@ $menuLenghtTotal: $menuLenght * 100;
           }
         }
       } 
+    }
+    .lang-project{
+      justify-content: flex-start;
+      .language{
+        a{ font-size: 25px; color: #fff !important; padding: 16px 15px; }
+      }
+      .start-project{
+        display: none;
+      }
     }
     /* menu animate function */
     @for $i from 1 to $menuLenght {
