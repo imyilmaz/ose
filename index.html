@@ -152,7 +152,7 @@
                         </ul>
                     </div>
                     <div class="start-project ma-8">
-                        <a href="javascript:;">
+                        <a href="javascript:;" data-bs-toggle="modal" data-bs-target="#startYourProject">
                             <span class="icon">
                                 <svg width="4" height="4" viewBox="0 0 4 4" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -987,7 +987,82 @@
             </div><!-- main -->
         </div><!-- #smooth-content -->
     </div><!-- #smooth-wrapper -->
+    <div class="modal fade" id="startYourProject" tabindex="-1" aria-labelledby="startYourProjectLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h1 class="modal-title" id="startYourProjectLabel">Start your project</h1>
+                </div>
+                <div class="modal-body">
+                    <form action="#">
+                        <div class="form">
+                            <div class="row">
+                                <div class="col col-12 col-md-6">
+                                    <div class="form-group">
+                                        <input type="text" name="name" id="name" placeholder="Your Name"/>
+                                    </div>
+                                </div>
+                                <div class="col col-12 col-md-6">
+                                    <div class="form-group">
+                                        <input type="text" name="email" id="email" placeholder="Email address"/>
+                                    </div>
+                                </div>
+                                <div class="col col-12 col-md-6">
+                                    <div class="form-group">
+                                        <input type="text" name="phone" id="phone" placeholder="Phone number"/>
+                                    </div>
+                                </div>
+                                <div class="col col-12 col-md-6">
+                                    <div class="form-group">
+                                        <input type="text" name="companyName" id="companyName" placeholder="Company Name"/>
+                                    </div>
+                                </div>
+                                <div class="col col-12 col-md-6">
+                                    <div class="form-group">
+                                        <select name="country" id="country">
+                                            <option value="0">Country</option>
+                                            <option value="1">USA</option>
+                                            <option value="2">Türkiye</option>
+                                            <option value="3">Deutschland</option>
+                                            <option value="4">France</option>
+                                            <option value="5">Italy</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col col-12 col-md-6">
+                                    <div class="form-group">
+                                        <select name="city" id="city">
+                                            <option value="0">City</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col col-12 col-md-12">
+                                    <div class="form-group">
+                                        <textarea name="message" id="message" placeholder="Your Message"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <p>I have read and <span>agree</span> to the terms of use.</p>
+                    <button type="button" class="btn btn-primary">
+                        <span class="icon">
+                            <svg width="4" height="4" viewBox="0 0 4 4" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="2" cy="2" r="1.35" stroke="currentColor" stroke-width="1.3" />
+                            </svg>
+                        </span>
+                        <span>Submit</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="assets/js/jquery-3.7.1.min.js" defer></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/gsap.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/ScrollTrigger.min.js" defer></script>
     <!-- ScrollSmoother requires ScrollTrigger -->
