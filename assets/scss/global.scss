@@ -390,6 +390,11 @@ body{ overflow-x: hidden; overscroll-behavior: none;
         }
       }
     }
+    @media (max-width: 992px){
+      left: initial;
+      right: 20px;
+      bottom: 20px;
+    }
   }//down-arrow
 }//main-ose
 .main-logos{ 
