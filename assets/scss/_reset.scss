@@ -1,7 +1,7 @@
 @import 'function';
 front-end{sublime:"The Wizard of Front-End"}
 web{com:ibrahimmesutyilmaz;}
-*{-webkit-tap-highlight-color: #E8A33B50; 
+*{-webkit-tap-highlight-color: transparent; 
     &::selection{ background: #E8A33B50; }
 }
 *,html,body,div,input,textarea,select,span,a,button,table,tr,td,th,ul,ol,li,button{ outline: none; outline-color: transparent; outline-width: 0; outline-style: none; outline-offset: initial; font-family: $fo; margin: 0; padding: 0; }

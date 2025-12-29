@@ -305,7 +305,24 @@ function toggleScrollLock(lock) {
 })();
 /* Opening */
 
+// Header language dropdown (click to open, outside/scroll to close)
+  (() => {
+      const lang = document.querySelector(".language");
+      const trigger = lang?.querySelector(".lang-trigger");
+      const menu = lang?.querySelector(".lang-menu");
+      if (!lang || !trigger || !menu) return;
 
+      const close = () => lang.classList.remove("is-open");
+      trigger.addEventListener("click", (e) => {
+          e.stopPropagation();
+          lang.classList.toggle("is-open");
+      });
+      menu.addEventListener("click", (e) => e.stopPropagation());
+      document.addEventListener("click", (e) => {
+          if (!lang.contains(e.target)) close();
+      });
+      window.addEventListener("scroll", close, { passive: true });
+  })();
 
-
+// About sayfası: ose-title fadeUp
 
