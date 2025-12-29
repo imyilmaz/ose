@@ -308,6 +308,4 @@ function toggleScrollLock(lock) {
 
 
 
-/* modal settings */
-
 
