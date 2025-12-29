@@ -324,5 +324,37 @@ function toggleScrollLock(lock) {
       window.addEventListener("scroll", close, { passive: true });
   })();
 
-// About sayfası: ose-title fadeUp
+// Footer mobil tab kontrolü (pure JS)
+(() => {
+  const tabWraps = document.querySelectorAll('.footer-tabs-wrap');
+  tabWraps.forEach(wrap => {
+    const buttons = Array.from(wrap.querySelectorAll('[data-footer-tab-target]'));
+    const panes = Array.from(wrap.querySelectorAll('.footer-tab-pane'));
+    if (!buttons.length || !panes.length) return;
 
+    const activate = (targetId) => {
+      buttons.forEach(btn => {
+        const isActive = btn.getAttribute('data-footer-tab-target') === targetId;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+      panes.forEach(pane => {
+        const match = `#${pane.id}` === targetId;
+        pane.classList.toggle('show', match);
+        pane.classList.toggle('active', match);
+        pane.classList.add('fade');
+      });
+    };
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-footer-tab-target');
+        if (!target) return;
+        activate(target);
+      });
+    });
+
+    const firstTarget = buttons[0]?.getAttribute('data-footer-tab-target');
+    if (firstTarget) activate(firstTarget);
+  });
+})();

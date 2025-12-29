@@ -371,7 +371,7 @@
                             <div class="text">
                                 <div class="text-inner">
                                     <div class="bg"></div>
-                                    <p class="gsap-splittext-2">We don’t just build booths; we build visibility,
+                                    <p>We don’t just build booths; we build visibility,
                                         networks,
                                         and influence that last beyond the show floor.</p>
                                 </div>
@@ -1157,46 +1157,20 @@
 
             oseTitle.forEach(title => {
                 gsap.from(title, {
-                y: 40,
+                y: 20,
                 opacity: 0,
                 filter: "blur(10px)",
-                duration: 0.8,
+                duration: 1.8,
                 ease: "power3.out",
                 scrollTrigger: {
                     trigger: title,
-                    start: "top bottom-=100", // tetik noktası: elemanın 50px aşağısı
-                    toggleActions: "play none none reverse"
+                    start: "top bottom", // tetik noktası: elemanın 50px aşağısı
+                    end: "top 65%",
+                    toggleActions: "play none play reset",
+                    scrub: true
                 }
                 });
             });
-
-            // SplitText (early start) for a specific element
-            (() => {
-                const el = document.querySelector(".gsap-splittext-2");
-                if (!el) return;
-                let split = null;
-                const tl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: el,
-                        start: "top 120%", // much earlier
-                        end: "bottom 80%",
-                        scrub: 2,
-                        toggleActions: "play none play reset",
-                        onEnter: initSplit,
-                        onEnterBack: initSplit,
-                        onRefresh: initSplit
-                    },
-                });
-                function initSplit() {
-                    if (split) return;
-                    split = new SplitText(el, { type: "lines" });
-                    tl.fromTo(
-                        split.lines,
-                        { y: 80, opacity: 0, filter: "blur(10px)" },
-                        { y: 0, opacity: 1, filter: "blur(0px)", stagger: 0.05, duration: 0.6, ease: "power3.out" }
-                    );
-                }
-            })();
 
             gsap.fromTo(
                 ".logos-slider",
