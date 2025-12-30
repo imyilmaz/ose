@@ -2052,6 +2052,7 @@ body{ overflow-x: hidden; overscroll-behavior: none;
   }
 }//page-section-2
 .page-wwd{
+  padding-top: 250px;
   .head{
     width: 610px;
     max-width: 100%;
@@ -2084,7 +2085,94 @@ body{ overflow-x: hidden; overscroll-behavior: none;
       letter-spacing: -.5px;
     }
   }
-  .page-wwd-content{}
+  .page-wwd-content{
+    overflow: hidden;
+    padding: 30px 0 20px;
+      .page-wwd-content{ 
+        overflow: hidden; 
+        padding: 30px 0 20px; 
+        min-height: 520px; 
+      }
+      .page-wwd-grid{ 
+        display: grid; 
+        grid-template-columns: 1.1fr 1fr; 
+        align-items: center; 
+        gap: 40px;
+        @media (max-width: 992px){ 
+            grid-template-columns: 1fr; 
+            gap: 20px;
+        } 
+      }
+      .page-wwd-visual{
+        position: relative; 
+        border-radius: 16px;
+        overflow: hidden; 
+        height: 360px; 
+        .wwd-img{ 
+          position: absolute; 
+          inset: 0; 
+          width: 100%; 
+          height: 100%;  
+          transform-origin: center; 
+          opacity: 0; 
+          background: url(../img/page-wwd-content-img-1.png) center center/cover no-repeat;
+          background-attachment: fixed;
+          img{
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+          }
+        }
+      }
+      .page-wwd-text{
+        position: relative; 
+      }
+      .progress-bar{ 
+        position: relative; 
+        width: 100%; 
+        height: 2px; 
+        background: #e8e8e8; 
+        margin-bottom: 26px; 
+        overflow: hidden; 
+        .fill{ 
+          display: block; 
+          width: 0%; 
+          height: 100%; 
+          background: #f0ae25; 
+          transform-origin: left center; 
+        }
+      }
+      .wwd-copies{ 
+        position: relative; 
+        min-height: 140px; 
+      }
+      .wwd-copy{ 
+        position: absolute; 
+        inset: 0; 
+        opacity: 0; 
+        transform: translateY(30px); 
+        filter: blur(10px); 
+        h3{ 
+          font-size: 18px; 
+          margin-bottom: 10px; 
+        }
+        p{ 
+          margin: 0; 
+          color: #555; 
+        }
+        &.is-active{ 
+          opacity: 1; 
+          transform: translateY(0); 
+          filter: blur(0); 
+        }
+      }
+      .page-wwd-step{ 
+        font-size: 12px; 
+        letter-spacing: 2px; 
+        color: #888; 
+        margin-bottom: 6px; 
+      }
+  }
 }//page-wwd
 .modal{
   &#startYourProject{

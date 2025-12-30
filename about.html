@@ -15,6 +15,9 @@
     <meta name="msapplication-TileImage" content="assets/img/icons/ICON-320x320.png" />
     <link rel="stylesheet" href="https://use.typekit.net/bpt3fkp.css">
     <link rel="stylesheet" href="assets/scss/global.css">
+    <style>
+      /* page-wwd (about) overrides */
+    </style>
 </head>
 <body>
     <div class="intro">
@@ -252,31 +255,39 @@
                             <p>Experience the difference of flawless service.</p>
                         </div>
                         <div class="page-wwd-content">
-                            <div class="page-wwd-content-inner">
-                                <div class="page-wwd-img">
-                                    <img src="assets/img/page-wwd-content-img-1.png" alt="" />
-                                    <img src="assets/img/page-wwd-content-img-1.png" alt="" />
-                                    <img src="assets/img/page-wwd-content-img-1.png" alt="" />
-                                    <img src="assets/img/page-wwd-content-img-1.png" alt="" />
+                            <div class="page-wwd-grid">
+                                <div class="page-wwd-visual">
+                                    <div class="wwd-img wwd-img-1">
+                                    </div>
+                                    <div class="wwd-img wwd-img-2">
+                                    </div>
+                                    <div class="wwd-img wwd-img-3">
+                                    </div>
+                                    <div class="wwd-img wwd-img-4">
+                                    </div>
                                 </div>
-                                <div class="page-wwd-article">
-                                    <div class="progress-bar"></div>
-                                    <div class="page-wwd-items">
-                                        <div class="page-wwd-item">
+                                <div class="page-wwd-text">
+                                    <div class="progress-bar"><span class="fill"></span></div>
+                                    <div class="wwd-copies">
+                                        <div class="wwd-copy is-active" data-step="1">
+                                            <div class="page-wwd-step">01</div>
                                             <h3>Stand Design & Creative</h3>
                                             <p>We create standout, brand-focused booth experiences that capture attention.</p>
                                         </div>
-                                        <div class="page-wwd-item">
-                                            <h3>Stand Design & Creative</h3>
-                                            <p>We create standout, brand-focused booth experiences that capture attention.</p>
+                                        <div class="wwd-copy" data-step="2">
+                                            <div class="page-wwd-step">02</div>
+                                            <h3>Project Planning</h3>
+                                            <p>End-to-end planning for seamless booth experiences at any scale.</p>
                                         </div>
-                                        <div class="page-wwd-item">
-                                            <h3>Stand Design & Creative</h3>
-                                            <p>We create standout, brand-focused booth experiences that capture attention.</p>
+                                        <div class="wwd-copy" data-step="3">
+                                            <div class="page-wwd-step">03</div>
+                                            <h3>Production & Build</h3>
+                                            <p>High-quality fabrication and assembly with global standards.</p>
                                         </div>
-                                        <div class="page-wwd-item">
-                                            <h3>Stand Design & Creative</h3>
-                                            <p>We create standout, brand-focused booth experiences that capture attention.</p>
+                                        <div class="wwd-copy" data-step="4">
+                                            <div class="page-wwd-step">04</div>
+                                            <h3>On-site Support</h3>
+                                            <p>Dedicated teams for setup, maintenance, and last-minute refinements.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -875,6 +886,79 @@
             }
 
             initLogosSlider();
+
+            // ABOUT - page-wwd scroll pinned carousel
+            (() => {
+                const section = document.querySelector(".page-wwd");
+                const visual = section?.querySelector(".page-wwd-visual");
+                const imgs = Array.from(section?.querySelectorAll(".page-wwd-visual .wwd-img") || []);
+                const copies = Array.from(section?.querySelectorAll(".wwd-copy") || []);
+                const fill = section?.querySelector(".page-wwd .progress-bar .fill");
+                if (!section || !visual || !imgs.length || !copies.length || typeof ScrollTrigger === "undefined") return;
+
+                const count = Math.min(imgs.length, copies.length);
+
+                gsap.set(imgs, { opacity: 0, scale: 0.6 });
+                gsap.set(copies, { opacity: 0, y: 20, filter: "blur(10px)" });
+                gsap.set(imgs[0], { opacity: 1, scale: 1 });
+                gsap.set(copies[0], { opacity: 1, y: 0, filter: "blur(0px)" });
+                copies[0].classList.add("is-active");
+
+                const trans = 0.9;          // gecis suresi
+                const hold = 0.35;          // her adim sonunda bekleme suresi
+                const stepWindow = trans + hold;
+                const steps = count - 1;
+                const totalDuration = stepWindow * steps;
+
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top top",
+                        end: "+=400%",
+                        pin: true,
+                        scrub: true,
+                        anticipatePin: 1,
+                        invalidateOnRefresh: true,
+                        snap: steps > 0 ? {
+                            snapTo: 1 / steps,
+                            duration: 0.4,
+                            ease: "power1.inOut"
+                        } : false
+                    }
+                });
+
+                if (fill) tl.to(fill, { width: "100%", ease: "none", duration: totalDuration || 0.01 }, 0);
+
+                for (let i = 1; i < count; i++) {
+                    const prevImg = imgs[i - 1];
+                    const nextImg = imgs[i];
+                    const prevCopy = copies[i - 1];
+                    const nextCopy = copies[i];
+
+                    const label = `step-${i}`;
+                    const stepPos = stepWindow * (i - 1);
+                    tl.add(label, stepPos);
+
+                    tl.to(prevImg, { opacity: 0, duration: trans * 0.45, ease: "power1.in" }, label);
+                    tl.fromTo(nextImg,
+                        { opacity: 0, scale: 0.6 },
+                        { opacity: 1, scale: 1, duration: trans, ease: "power2.out" },
+                        label
+                    );
+
+                    tl.to(prevCopy, { opacity: 0, y: -10, filter: "blur(8px)", duration: trans * 0.4, ease: "power1.in" }, label);
+                    tl.fromTo(nextCopy,
+                        { opacity: 0, y: 20, filter: "blur(10px)" },
+                        { opacity: 1, y: 0, filter: "blur(0px)", duration: trans * 0.7, ease: "power3.out" },
+                        `${label}+=0.08`
+                    );
+
+                    tl.add(() => {
+                        prevCopy.classList.remove("is-active");
+                        nextCopy.classList.add("is-active");
+                    }, label);
+                }
+            })();
         });
     </script>
 </body>
