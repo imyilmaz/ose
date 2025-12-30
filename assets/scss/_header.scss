@@ -283,6 +283,49 @@
       }
     }
   }
+  &.darken{
+    .blur{
+      background: rgba(255,255,255,.5);
+    }
+    .logo{
+      a{
+        svg{
+          .logo-1,.logo-5,.logo-6{
+            fill: #575756;
+          }
+          .logo-2,.logo-3,.logo-4{
+            fill: #f07e26;
+          }
+        }
+      }
+    }
+    .header-up{
+      .menu{
+        a{ color: #222; }
+      }
+    }
+    .nav-bar{
+      .menu{
+        >ul{
+          >li{
+            >a{ color: #000; }
+          }
+        }
+      }
+    }
+    .lang-project{
+      .language{
+        .lang-trigger{ 
+          color: #000; 
+          span{
+            &.icon{
+              background: url(../img/lang-down-arrow-dark.svg);
+            }
+          } 
+        }
+      }
+    }
+  }
 }/* header */
 
 
