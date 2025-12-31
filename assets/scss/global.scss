@@ -3,7 +3,7 @@
 @import "reset";
 @import "fancyapps";
 //@import "swiper";
-body{ overflow-x: hidden; overscroll-behavior: none;
+body{ overflow-x: hidden; overscroll-behavior: none; background: #EEEEEE;
   &.body-hidden{ overflow: hidden; height: 100vh; }
   &.page-load{*{ transition: 0s !important; &:before,&:after{ transition: 0s !important; }}}
 }
@@ -383,6 +383,19 @@ body{ overflow-x: hidden; overscroll-behavior: none;
 }//down-arrow
 .main-logos{ 
   padding: 50px 0;
+  &.logos-border-bg{
+    .container{
+      position: relative;
+    }
+    .bg{
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      height: 250px;
+      pointer-events: none;
+      background: url(../img/page-section-1-bg-line.svg) top right no-repeat;
+    }
+  }
   @media (max-width: 992px){
     padding: 20px;
   }
@@ -1994,6 +2007,7 @@ body{ overflow-x: hidden; overscroll-behavior: none;
       border-color: #DEDEDE;
       border-right: 0;
       border-left: 0;
+      background: transparent;
       .accordion-header{
         .accordion-button{
           box-shadow: none;
@@ -2001,7 +2015,7 @@ body{ overflow-x: hidden; overscroll-behavior: none;
           font-weight: 500;
           color: #646464;
           padding: 24px;
-          background: #fff;
+          background: transparent;
           span{
             font-size: 13px;
             color: #000000;
@@ -2094,10 +2108,10 @@ body{ overflow-x: hidden; overscroll-behavior: none;
         min-height: 520px; 
       }
       .page-wwd-grid{ 
-        display: grid; 
-        grid-template-columns: 1.1fr 1fr; 
+        display: flex;
+        flex-wrap: wrap;
         align-items: center; 
-        gap: 40px;
+        gap: 110px;
         @media (max-width: 992px){ 
             grid-template-columns: 1fr; 
             gap: 20px;
@@ -2108,14 +2122,14 @@ body{ overflow-x: hidden; overscroll-behavior: none;
         border-radius: 16px;
         overflow: hidden; 
         height: 360px; 
+        flex: 0 0 500px;
+        max-width: 500px;
         .wwd-img{ 
           position: absolute; 
           inset: 0; 
           width: 100%; 
           height: 100%;  
-          transform-origin: center; 
-          opacity: 0; 
-          background: url(../img/page-wwd-content-img-1.png) center center/cover no-repeat;
+          border-radius: 16px;
           background-attachment: fixed;
           img{
             width: 100%; 
@@ -2126,13 +2140,15 @@ body{ overflow-x: hidden; overscroll-behavior: none;
       }
       .page-wwd-text{
         position: relative; 
+        flex: 1 1 0;
+        padding-bottom: 50px;
       }
       .progress-bar{ 
         position: relative; 
         width: 100%; 
         height: 2px; 
         background: #e8e8e8; 
-        margin-bottom: 26px; 
+        margin-bottom: 95px; 
         overflow: hidden; 
         .fill{ 
           display: block; 
@@ -2152,13 +2168,23 @@ body{ overflow-x: hidden; overscroll-behavior: none;
         opacity: 0; 
         transform: translateY(30px); 
         filter: blur(10px); 
-        h3{ 
-          font-size: 18px; 
-          margin-bottom: 10px; 
-        }
-        p{ 
-          margin: 0; 
-          color: #555; 
+        display: flex;
+        gap: 110px;
+        .text{
+          h3{ 
+            font-size: 25px; 
+            font-weight: 500;
+            color: #000000;
+            letter-spacing: -1px;
+            line-height: 1.25;
+            margin-bottom: 25px; 
+          }
+          p{ 
+            font-size: 20px;
+            line-height: 1.375;
+            color: #000000; 
+            margin: 0; 
+          }
         }
         &.is-active{ 
           opacity: 1; 
@@ -2167,13 +2193,112 @@ body{ overflow-x: hidden; overscroll-behavior: none;
         }
       }
       .page-wwd-step{ 
-        font-size: 12px; 
-        letter-spacing: 2px; 
-        color: #888; 
+        font-size: 13px; 
+        color: #000000; 
         margin-bottom: 6px; 
       }
   }
 }//page-wwd
+.page-ecosystem{
+  padding-top: 180px;
+  padding-bottom: 80px;
+  .head{
+    position: relative;
+    h2{
+      position: absolute;
+      top: 0;
+      font-size: 12px;
+      font-weight: 500;
+      color: #000000;
+      span{
+        color: #f07e26;
+        display: inline-block;
+        padding-right: 13px;
+      }
+      &:before{
+        content:"";
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        background: #f07e26;
+        border-radius: 5px;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+  }
+  .article{
+    p{
+      font-size: 40px;
+      color: #000000;
+      font-weight: 500;
+      line-height: 1.25;
+      letter-spacing: -.5px;
+    }
+  }
+  .stats-area{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 150px;
+    .stat-item{
+      min-height: 320px;
+      padding: 35px 35px 0px 35px;
+      flex: 1 1 0;
+      max-width: 20%;
+      transition: .4s;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: #F6F6F6;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      overflow: hidden;
+      .icon{
+        margin-bottom: 100px;
+        color: #000;
+        transition: .4s;
+        svg{
+          display: block;
+        }
+      }
+      .text{
+        h3{
+          font-size: 25px;
+          font-weight: 500;
+          line-height: 1.25;
+          color: #000000;
+          letter-spacing: -.5px;
+          margin-bottom: 30px;
+          transition: .4s;
+        }
+        p{
+          font-size: 17px;
+          line-height: 1.25;
+          color: #000000;
+          letter-spacing: -.5px;
+          margin-bottom: 0px;
+          transition: .4s;
+        }
+      }
+      &.active{
+        flex: 1 1 0;
+        max-width: 40%;
+        padding-bottom: 30px;
+        border-color: #FABC5F;
+        .icon{
+          color: #646464;
+        }
+        .text{
+          h3{
+            color: #646464;
+          }
+        }
+      }
+    }
+  }
+}//page-ecosystem
 .modal{
   &#startYourProject{
     .modal-content{
