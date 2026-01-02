@@ -202,52 +202,52 @@
                         <div class="work-list">
                             <div class="row">
                                 <div class="col col-12 col-md-6">
-                                    <div class="item">
+                                    <a class="item" href="work-detail.html">
                                         <img src="assets/img/work-1.png" alt="" />
                                         <div class="text">
                                             Fishing
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
                                 <div class="col col-12 col-md-6">
-                                    <div class="item">
+                                    <a class="item" href="work-detail.html">
                                         <img src="assets/img/work-2.png" alt="" />
                                         <div class="text">
                                             Benimar
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
                                 <div class="col col-12 col-md-6">
-                                    <div class="item">
+                                    <a class="item" href="work-detail.html">
                                         <img src="assets/img/work-3.png" alt="" />
                                         <div class="text">
                                             Amann
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
                                 <div class="col col-12 col-md-6">
-                                    <div class="item">
+                                    <a class="item" href="work-detail.html">
                                         <img src="assets/img/work-4.png" alt="" />
                                         <div class="text">
                                             Fugu
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
                                 <div class="col col-12 col-md-6">
-                                    <div class="item">
+                                    <a class="item" href="work-detail.html">
                                         <img src="assets/img/work-5.png" alt="" />
                                         <div class="text">
                                             Fluxys
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
                                 <div class="col col-12 col-md-6">
-                                    <div class="item">
+                                    <a class="item" href="work-detail.html">
                                         <img src="assets/img/work-6.png" alt="" />
                                         <div class="text">
                                             Dutch Clean Tech
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
                             </div>
                             <nav aria-label="work-list" class="ose-pagination">
@@ -270,11 +270,11 @@
                     <div class="container">
                         <div class="article">
                             <div class="text">
-                                <p>Interested in a realisation with OSE?</p>
+                                <p class="gsap-splittext-1">Interested in a realisation with OSE?</p>
                             </div>
                             <div class="contact-us">
-                                <p>Don't hesitate to get in touch. </p>
-                                <div class="contact-btn">
+                                <p class="gsap-splittext-1">Don't hesitate to get in touch. </p>
+                                <div class="contact-btn gsap-splittext-1">
                                     <a href="contact.html">
                                         <span class="icon"></span>
                                         <span>Contact us</span>
@@ -672,6 +672,10 @@
             const fadeAnimate = gsap.utils.toArray([
                 ".page-banner .fa",
                 ".page-banner .breadcrumb",
+                ".page-work-list .article .head",
+                ".page-work-list .article .select-set",
+                ".page-work-list .work-list .item",
+                ".page-work-list .work-list .ose-pagination",
             ]);
 
             if (!fadeAnimate.length || typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
