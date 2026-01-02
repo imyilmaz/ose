@@ -323,6 +323,13 @@
             }
           } 
         }
+        .lang-menu{
+          li{
+            a{
+              color: #000;
+            }
+          }
+        }
       }
     }
   }
@@ -514,6 +521,11 @@ $menuLenghtTotal: $menuLenght * 100;
         a{ font-size: 25px; color: #fff !important; padding: 16px 15px; }
         .lang-trigger{
           font-size: 25px; color: #fff !important; padding: 16px 15px; 
+          span{
+            &.icon{
+              background: url(../img/lang-down-arrow.svg) !important;
+            }
+          }
         }
         .lang-menu{
           margin-bottom: 20px;
