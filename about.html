@@ -206,7 +206,7 @@
                                 </div>
                             </div>
                             <div class="col col-12 col-md-8">
-                                <div class="accordion gsap-splittext-1" id="accordion1">
+                                <div class="accordion" id="accordion1">
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="heading1">
                                             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
@@ -751,7 +751,7 @@
         </div>
     </div><!-- modal -->
     <script src="assets/js/jquery-3.7.1.min.js" defer></script>
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/gsap.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.1/dist/ScrollTrigger.min.js" defer></script>
     <!-- ScrollSmoother requires ScrollTrigger -->
@@ -812,6 +812,7 @@
                 ".page-banner .breadcrumb",
                 ".page-wwd .head",
                 ".page-ecosystem .head",
+                ".page-section-2 .accordion"
             ]);
 
             if (!fadeAnimate.length || typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
