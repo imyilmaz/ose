@@ -4034,6 +4034,152 @@ body{ overflow-x: hidden; overscroll-behavior: none; background: #EEEEEE;
     }
   }
 }//page-contact
+.page-global-reach{
+  padding-top: 200px;
+  background: transparent;
+  .map-up-area{
+    text-align: center;
+    display: block;
+    .breadcrumb{
+      justify-content: center;
+      margin-bottom: 0;
+      @media (max-width: 992px){
+        justify-content: flex-start;
+      }
+      ul{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        li{
+          a{
+            display: block;
+            position: relative;
+            font-size: 15px;
+            color: #000000;
+            &:before{
+              content:"/";
+              position: absolute;
+              color: #A7A7A7;
+              right: -11px;
+            }
+          }
+          &:nth-last-child(1){
+            a{
+              color: #A7A7A7;
+              &:before{
+                display: none;
+              }
+            }
+          }
+        }
+      }
+    }
+    .article{
+      width: 100%;
+      p{
+        font-size: 65px;
+        letter-spacing: -1px;
+        font-weight: 600;
+        color: #000;
+        line-height: 1.25;
+        span{
+          display: block;
+          color: #A7A7A7;
+        }
+      }
+    }
+  }
+  .locations{
+    .location-item{
+      .loc-head{
+        color: #000;
+      }
+    }
+  }
+  .global-reach-section{
+    width: 820px;
+    margin: 0 auto;
+    max-width: 100%;
+    h3{
+      font-size: 35px;
+      color: #000000;
+      font-weight: 600;
+      margin-bottom: 120px;
+      text-align: center;
+    }
+    .accordion{
+      border: none;
+      margin-bottom: 100px;
+      .accordion-item{
+        border-color: #DEDEDE;
+        border-right: 0;
+        border-left: 0;
+        background: transparent;
+        .accordion-header{
+          .accordion-button{
+            box-shadow: none;
+            font-size: 25px;
+            font-weight: 500;
+            color: #646464;
+            padding: 24px;
+            background: transparent;
+            span{
+              font-size: 13px;
+              color: #000000;
+              position: absolute;
+              left: 0px;
+              top: 20px;
+              transition: .4s;
+            }
+            &:after {
+              width: 17px;
+              height: 2px;
+              content: "";
+              background: #000;
+              transition: .4s;
+              position: absolute;
+              top: 50%;
+              right: 15px;
+              transform: translateY(-50%);
+            }
+            &:before {
+              width: 2px;
+              height: 2px; 
+              content: "";
+              background: #000;
+              transition: .4s;
+              position: absolute;
+              top: 50%;
+              right: 22px;
+              transform: translateY(-50%);
+            }
+            &.collapsed{
+              color: #000;
+              &:before {
+                height: 17px; 
+              }
+              span{
+                color: #646464;
+              }
+            }
+          }
+        }
+        .accordion-collapse{
+          .accordion-body{
+            p{}
+          }
+        }
+      }
+    }
+    .ose-realisation{
+      .contact-us{
+        .contact-btn{
+          justify-content: flex-end;
+        }
+      }
+    }
+  }
+}//page-global-reach
 .modal{
   &#startYourProject{
     .modal-content{
