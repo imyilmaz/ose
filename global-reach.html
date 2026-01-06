@@ -823,24 +823,26 @@
             const oseTitle = gsap.utils.toArray([
                 ".main-about .head .ose-title",
             ]);
-            if (!oseTitle.length || typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
+            if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") return;
 
-            oseTitle.forEach(title => {
-                gsap.from(title, {
-                    y: 20,
-                    opacity: 0,
-                    filter: "blur(10px)",
-                    duration: 0.4,
-                    ease: "none",
-                    scrollTrigger: {
-                        trigger: title,
-                        start: "top bottom", // tetik noktası: elemanın 50px aşağısı
-                        end: "top 75%",
-                        toggleActions: "play none play reset",
-                        scrub: true
-                    }
+            if (oseTitle.length) {
+                oseTitle.forEach(title => {
+                    gsap.from(title, {
+                        y: 20,
+                        opacity: 0,
+                        filter: "blur(10px)",
+                        duration: 0.4,
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: title,
+                            start: "top bottom", // tetik noktası: elemanın 50px aşağısı
+                            end: "top 75%",
+                            toggleActions: "play none play reset",
+                            scrub: true
+                        }
+                    });
                 });
-            });
+            }
 
             // Map pin size proportional to data-count + hover scale by size
             (() => {
